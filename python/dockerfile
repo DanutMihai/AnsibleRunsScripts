@@ -1,0 +1,18 @@
+# Folosește o imagine de bază oficială Python
+FROM python:3.8-slim
+
+# Setează directorul de lucru în container
+WORKDIR /app
+
+# Instalează orice biblioteci externe necesare.
+# De exemplu, `requests` pentru scriptul de API.
+RUN pip install --no-cache-dir requests
+
+# Copiază scripturile Python în directorul de lucru în container
+COPY script1.py ./script1.py
+COPY script2.py ./script2.py
+COPY script3.py ./script3.py
+
+# Deși nu este necesar să specifici un CMD aici, deoarece CronJob va specifica comanda la rulare,
+# poți seta un script default pentru scopuri de testare sau debug.
+CMD ["python", "./script1.py"]
