@@ -1,0 +1,19 @@
+# script3.py
+
+import requests
+
+# URL-ul endpoint-ului pentru postări
+url = "https://jsonplaceholder.typicode.com/posts/1"
+
+# Face request-ul GET
+response = requests.get(url)
+
+# Verifică dacă request-ul a fost cu succes
+if response.status_code == 200:
+    post = response.json()
+    # Scrie titlul și corpul postării într-un fișier
+    with open("api_response.txt", "w") as file:
+        file.write(f"Title: {post['title']}\n")
+        file.write(f"Body: {post['body']}\n")
+else:
+    print("Failed to retrieve data")

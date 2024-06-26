@@ -1,0 +1,10 @@
+# script1.py
+
+from datetime import datetime
+
+# Obține data și ora curentă
+now = datetime.now()
+
+# Deschide fișierul în modul append
+with open("log.txt", "a") as file:
+    file.write(f"Script rulat la: {now}\n")

@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-script1
+spec:
+  schedule: "0 */6 * * *"  # Rulează la fiecare 6 ore
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: container-script1
+            image: gcr.io/my-project/my-python-app:latest  # Asigură-te că folosești calea corectă a imaginii
+            command: ["python", "script1.py"]
+          restartPolicy: OnFailure
