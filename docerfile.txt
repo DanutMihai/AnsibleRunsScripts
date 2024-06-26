@@ -1,0 +1,14 @@
+# Python base image
+FROM python:3.8-slim
+
+# Setează directorul de lucru
+WORKDIR /app
+
+# copy script Python to image
+COPY my_script.py ./my_script.py
+
+# install dependencies if needed
+RUN pip install --no-cache-dir requests numpy
+
+# lancu command for when the container starts
+CMD ["python", "./my_script.py"]

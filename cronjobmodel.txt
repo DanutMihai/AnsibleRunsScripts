@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cronjob
+spec:
+  schedule: "0 */6 * * *"  # Rulează la fiecare 6 ore
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: my-container
+            image: gcr.io/my-project/my-image:latest
+            env:
+            - name: ARTIFACTORY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artifactory-secret
+                  key: username
+            - name: ARTIFACTORY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artifactory-secret
+                  key: password
+          restartPolicy: OnFailure
