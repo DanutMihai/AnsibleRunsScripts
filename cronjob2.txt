@@ -1,1 +1,3 @@
-"=formatDateTime(@currentField, 'yyyy-MM-dd HH:mm')"
+  "elmType": "div",
+  "txtContent": "=formatDateTime(@currentField, 'yyyy-MM-dd HH:mm')"
+}
