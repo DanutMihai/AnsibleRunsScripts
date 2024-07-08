@@ -1,0 +1,12 @@
+Set(managerInfo, GetManagerInfo(userInfo.ManagerEmail));
+
+Function GetManagerInfo(managerEmail As Text) As Record
+{
+    Set(managerRecord, LookUp(UserData, Email = managerEmail));
+    
+    If(
+        managerRecord.Senioritate = "Senior" Or managerRecord.Senioritate = "Presedinte" Or managerRecord.Senioritate = "Director",
+        Return managerRecord,
+        Return GetManagerInfo(managerRecord.ManagerEmail)
+    )
+}
