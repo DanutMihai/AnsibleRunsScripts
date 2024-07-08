@@ -1,12 +1,17 @@
-Set(managerInfo, GetManagerInfo(userInfo.ManagerEmail));
+Set(currentManagerEmail, userInfo.ManagerEmail);
+Set(managerFound, false);
+Set(managerInfo, {});
 
-Function GetManagerInfo(managerEmail As Text) As Record
-{
-    Set(managerRecord, LookUp(UserData, Email = managerEmail));
-    
+// Inițializează o buclă simulată pentru a găsi managerul corespunzător
+ForAll(Sequence(100), 
     If(
-        managerRecord.Senioritate = "Senior" Or managerRecord.Senioritate = "Presedinte" Or managerRecord.Senioritate = "Director",
-        Return managerRecord,
-        Return GetManagerInfo(managerRecord.ManagerEmail)
+        managerFound = false, 
+        Set(currentManager, LookUp(UserData, Email = currentManagerEmail));
+        If(
+            currentManager.Senioritate = "Senior" Or currentManager.Senioritate = "Presedinte" Or currentManager.Senioritate = "Director",
+            Set(managerFound, true);
+            Set(managerInfo, currentManager),
+            Set(currentManagerEmail, currentManager.ManagerEmail)
+        )
     )
-}
+);
