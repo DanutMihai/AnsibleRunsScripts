@@ -1,34 +1,36 @@
 USE MOVIUS_GOLDENDATASOURCE;
 
 -- Check if the column _state exists and its data type in TaskAPI.Tasks
-IF NOT EXISTS (
+IF EXISTS (
     SELECT * 
     FROM INFORMATION_SCHEMA.COLUMNS 
-    WHERE TABLE_NAME = 'Tasks' AND COLUMN_NAME = '_state' AND DATA_TYPE = 'varchar' AND CHARACTER_MAXIMUM_LENGTH = 50
+    WHERE TABLE_NAME = 'Tasks' AND COLUMN_NAME = '_state' AND DATA_TYPE = 'varchar' AND CHARACTER_MAXIMUM_LENGTH <> 50
 )
 BEGIN
     PRINT 'Altering column _state in TaskAPI.Tasks';
+
+    -- Drop the default constraint if it exists
+    IF EXISTS (
+        SELECT * 
+        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
+        WHERE TABLE_NAME = 'Tasks' AND CONSTRAINT_NAME = 'DF_Tasks__state'
+    )
+    BEGIN
+        PRINT 'Dropping existing constraint DF_Tasks__state in TaskAPI.Tasks';
+        ALTER TABLE TaskAPI.Tasks DROP CONSTRAINT DF_Tasks__state;
+    END
+
+    -- Alter the column
     ALTER TABLE TaskAPI.Tasks ALTER COLUMN _state VARCHAR(50);
+
+    -- Add the default constraint back
+    PRINT 'Adding default constraint DF_Tasks__state in TaskAPI.Tasks';
+    ALTER TABLE TaskAPI.Tasks ADD CONSTRAINT DF_Tasks__state DEFAULT 'new' FOR _state;
 END
 ELSE
 BEGIN
-    PRINT 'Column _state in TaskAPI.Tasks already exists with the correct data type.';
+    PRINT 'Column _state in TaskAPI.Tasks already exists with the correct data type or does not need altering.';
 END
-
--- Check if the default constraint DF_Tasks__state exists in TaskAPI.Tasks
-IF EXISTS (
-    SELECT * 
-    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE TABLE_NAME = 'Tasks' AND CONSTRAINT_NAME = 'DF_Tasks__state'
-)
-BEGIN
-    PRINT 'Dropping existing constraint DF_Tasks__state in TaskAPI.Tasks';
-    ALTER TABLE TaskAPI.Tasks DROP CONSTRAINT DF_Tasks__state;
-END
-
--- Add the default constraint for _state in TaskAPI.Tasks
-PRINT 'Adding default constraint DF_Tasks__state in TaskAPI.Tasks';
-ALTER TABLE TaskAPI.Tasks ADD CONSTRAINT DF_Tasks__state DEFAULT 'new' FOR _state;
 
 -- Check if the column _state exists and its data type in TaskAPI.TaskUpdateRecords
 IF NOT EXISTS (
